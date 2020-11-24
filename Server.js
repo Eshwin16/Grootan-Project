@@ -4,12 +4,12 @@ const app=express();
 const PORT=process.env.PORT||8080;
 
 app.get("/details/:id",function(req,res){
-    var author="",score="",title="",postedTime="",comments="<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\"><table class=\"table\"><th>Author</th><th>Comments</th>",official="",x1=6;
+    var authorname="",scoredmark="",title="",postedTime="",commentsgiven="<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\"><table class=\"table\"><th>Author</th><th>Comments</th>",official="",x1=6;
   var output="<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">";
   request(`https://hacker-news.firebaseio.com/v0/item/${req.params.id}.json?print=pretty`,function(error,response,body){
        const resp=JSON.parse(body);
-       author=resp.by;
-       score=resp.score;
+       authorname=resp.by;
+       scoredmark=resp.score;
        title=resp.title;
        postedTime=resp.time;
        official=resp.url;
@@ -19,10 +19,10 @@ app.get("/details/:id",function(req,res){
         request(`https://hacker-news.firebaseio.com/v0/item/${element}.json?print=pretty`,function(err,respo,body1){
         var out=JSON.parse(body1);
         console.log(out);   
-        comments+="<tr><td>"+out.by+"</td><td>"+out.text+"</td></tr>";
+        commentsgiven+="<tr><td>"+out.by+"</td><td>"+out.text+"</td></tr>";
         if(index==(x-1))
         {
-        output+=`<h1>Story Details</h1><table class=\"table\"><tr><td>Title:</td><td>${title}</td><tr><td>Author:</td><td>${author}<tr></td><td>Score:</td><td>${score}<tr></td><td>Created TimeStamp:</td><td>${postedTime}<tr></td><td>More Info</td><td><a href=${official}>Read More</a></td></table><br><h3>Comments:</h3><br>${comments}<br>`;
+        output+=`<h1>Story Details</h1><table class=\"table\"><tr><td>Title:</td><td>${title}</td><tr><td>Author:</td><td>${authorname}<tr></td><td>Score:</td><td>${scoredmark}<tr></td><td>Created TimeStamp:</td><td>${postedTime}<tr></td><td>More Info</td><td><a href=${official}>Read More</a></td></table><br><h3>Comments:</h3><br>${commentsgiven}<br>`;
         res.send(output);
         }
         })
@@ -30,10 +30,10 @@ app.get("/details/:id",function(req,res){
        }catch(e)
        {
            x1=0;
-           comments="No Comments Yet";
+           commentsgiven="No Comments Yet";
        }
        if(x1==0)
-       res.send(`<h1>Story Details</h1><br>Title:${title}<br>Author:${author}<br>Score:${score}<br><h3>Comments:</h3>${comments}<br>Created Time:${postedTime}<br><a href=${official}>Read More</a>`);
+       res.send(`<h1>Story Details</h1><br>Title:${title}<br>Author:${authorname}<br>Score:${scoredmark}<br><h3>Comments:</h3>${commentsgiven}<br>Created Time:${postedTime}<br><a href=${official}>Read More</a>`);
   })
 })
 app.get("/",function(req,res){
